@@ -34,8 +34,6 @@ app.route('/new_post', methods=['POST','GET'])
 def new_post():
 
     if request.method == 'POST':
-        title_error = ""
-        body_error = ""
         blog_title = request.form['title']
         blog_content = request.form['body']
         new_blog = Blog(blog_title, blog_content)
