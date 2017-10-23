@@ -30,7 +30,7 @@ def index():
     blogs = Blog.query.all()
     return render_template("blog.html",blogs=blogs, title='title')
 
-app.route('/new_post', methods=['POST','GET'])
+app.route('/new-post', methods=['POST','GET'])
 def new_post():
 
     if request.method == 'POST':
@@ -45,17 +45,27 @@ def new_post():
             return redirect(url)
 
         else:
-            return '<h1>Error!</h1>'
+            flash("Entries needed in both fields!")
+
+            return render_template('new-post.html',category="error",
+                                    blog_title = blog_title, blog_content  = blog_content)
+
 
     else:
-        return render_template('new_post.html')
+        return render_template('new-post.html')
+
+
+@app.route('/single-post', methods=['GET'])
+def show_post():
+    blog_id = request.args.get('id')
+    blogs = Blog.query.filter_by(id=blog_id).first()
+
+    return render_template('single-post.html', blogs=blogs)
 
 
 @app.route('/blog', methods=['GET'])
 def get_posts():
     return redirect('/')
-
-
 
 
 
