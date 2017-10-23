@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if blogs|length == 0  %}
+    <p>No Content!</p>
+    
+    {% else %}
+     <ul>
+        {% for blog in blogs %}
+            <li>
+                <a href="/single_template?id={{blog.id}}">{{blog.title}}</a>
+                </p>{{blog.body}}</p> 
+            </li>
+        {% endfor %}
+     </ul>
+    {% endif %}
+{% endblock %}
