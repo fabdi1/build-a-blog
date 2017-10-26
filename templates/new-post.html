@@ -1,16 +1,22 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
 {% block content %}
-    <h1>Make a Blog Post!</h1>
-    <form method='post'>
-        <label> New Blog Title
-            <input type="text" name="blog" value="{{ blog_title }}" />
-        </label>
+    <div class="flex-container">
+    <h1>Add a Blog Entry</h1>
+    </div>
+    <form method="POST", action="/newpost">
+        <label for="title">Title for your new blog: </label>
+    </br>
+            <input id="title" type="text" name='title' value="{{request.form['title']}}" />
+        </br>
+        </br>
+         <label for="body">Your new blog:</label><br>
+            <textarea id="body" name='body' value="{{request.form['body']}}" class="container"></textarea>
+            <br>
+            <input type="submit" value="Add Entry"/>
+
         
-        <label> New Blog Content
-            <input type="text" name="content" value="{{ blog_content }}" />
-        </label>
-            <input type="submit" value="Add Blog" />
     </form>
 
+   
 {% endblock %}

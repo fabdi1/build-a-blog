@@ -1,11 +1,13 @@
 from flask import Flask, request, redirect, render_template, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
+import string
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:launchcode@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+app.secret_key = 'fNLjA7Y7V4EzM1'
 
 
 class Blog(db.Model):
@@ -18,56 +20,51 @@ class Blog(db.Model):
         self.title = title
         self.body = body
 
-    def is_valid(self):
-        if self.title and self.body:
-            return True
-        else:
-            return False
+    
 
-
-@app.route('/', methods=['GET'])
+@app.route('/blog', methods=['POST', 'GET'])
 def index():
-    blogs = Blog.query.all()
-    return render_template("blog.html",blogs=blogs, title='title')
+    blog_id=request.args.get('id')
+    if blog_id == None:
+        new_post = Blog.query.all()
+        return render_template('blog.html',title="Add a Blog Entry", new_post=new_post)
+    else: 
+        blog_entry=Blog.query.get(blog_id)
+        return render_template('single-post.html', blog_entry=blog_entry)
+  
 
-app.route('/new-post', methods=['POST','GET'])
-def new_post():
+@app.route('/newpost', methods=['POST','GET'])
+def new_post(): 
+    
 
+
+    if request.method == "GET":
+        return render_template('new-post.html')
+        
     if request.method == 'POST':
         blog_title = request.form['title']
         blog_content = request.form['body']
         new_blog = Blog(blog_title, blog_content)
 
-        if new_blog.is_valid():
+       
+
+        if len(blog_title) is 0 or len(blog_content) is 0:
+            flash("Blog title and content must be filled!", 'error')    
+            return render_template("new-post.html", blog_title=blog_title, blog_content=blog_content)
+
+        else: 
             db.session.add(new_blog)
             db.session.commit()
-            url = "/single_template?id=" + str(new_blog.id)
+            url = "/blog?id=" + str(new_blog.id)
             return redirect(url)
+            
+            
 
-        else:
-            flash("Entries needed in both fields!")
-
-            return render_template('new-post.html',category="error",
-                                    blog_title = blog_title, blog_content  = blog_content)
-
-
-    else:
-        return render_template('new-post.html')
-
-
-@app.route('/single-post', methods=['GET'])
+@app.route('/single', methods=['POST'])
 def show_post():
-    blog_id = request.args.get('id')
-    blogs = Blog.query.filter_by(id=blog_id).first()
-
-    return render_template('single-post.html', blogs=blogs)
-
-
-@app.route('/blog', methods=['GET'])
-def get_posts():
-    return redirect('/')
-
-
+    blog_id=request.args.get('id')
+    if request.method == "POST":
+        redirect('./blog?id={{Blog.id}}')
 
 
 if __name__ == "__main__":

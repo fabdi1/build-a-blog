@@ -2,16 +2,17 @@
 
 {% block content %}
 
-<h1> The Blog!! </h1>
-    {% if blogs|length == 0  %}
+<h1> Build-a-Blog </h1>
+    {% if new_post|length == 0  %}
     <p>No Content!</p>
     
     {% else %}
      <ul>
-        {% for blog in blogs %}
+        {% for Blog in new_post %}
             <li>
-                <a href="/single_template?id={{blog.id}}">{{blog.title}}</a>
-                </p>{{blog.body}}</p> 
+                <a href=./blog?id={{Blog.id}}>{{Blog.title}}</a>
+                </p>{{Blog.body}}</p> 
+                <hr />
             </li>
         {% endfor %}
      </ul>

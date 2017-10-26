@@ -1,11 +1,6 @@
 {% extends "base.html" %}
-
 {% block content %}
-
-<h1>{{blogs.title}}</h1>
-
- <br/>
-{{blogs.body}}
-
+    <h1 class=flex-container>{{blog_entry.title}}</h1>
+    <p>{{blog_entry.body}}</p>
 
 {% endblock %}
